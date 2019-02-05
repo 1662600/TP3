@@ -1,65 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:tp3/app/hiragana/hiragana.dart';
 import 'package:tp3/app/hiragana//symbol.dart';
+import 'dart:math';
 
-class Training extends StatefulWidget{
+class Training extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _Training();
   }
 }
 
-class _Training extends State<Training>{
+class _Training extends State<Training> {
 
-  String _choice1 = "whee";
-  String _choice2 = "whe";
-  String _choice3 = "whEE";
+  static const int _buttonNumber = 3;
+
+  List<String> _choices = List(_buttonNumber);
+  List<bool> _buttonsEnabled = List(_buttonNumber);
+
+  String _value = "";
+  String _answer = "";
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1,
-      child: Column(
-        children: <Widget>[
-          Symbol(value: "WHEEE",),
-
-//          ListView(
-//            children: <Widget>[
-//              FlatButton(
-//                child: Text(_choice1),
-//                onPressed: onChoice1ButtonPressed(),
-//                textColor: Color.fromARGB(0, 255, 0, 1),
-//              ),
-//              FlatButton(
-//                child: Text(_choice2),
-//                onPressed: onChoice2ButtonPressed(),
-//              ),
-//              FlatButton(
-//                child: Text(_choice3),
-//                onPressed: onChoice3ButtonPressed(),
-//              ),
-//            ],
-//          ),
-        ],
-      )
-    );
+        aspectRatio: 1,
+        child: Column(
+          children: <Widget>[
+            Symbol(
+              value: _value,
+            ),
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  FlatButton(
+                    textColor: _buttonsEnabled.elementAt(0)? Colors.black : Colors.red,
+                    child: Text(_choices.elementAt(0)
+                    ),
+                    onPressed: () =>
+                    _buttonsEnabled.elementAt(0)? onChoiceButtonPressed(0) : null,
+                  ),
+                  FlatButton(
+                    textColor: _buttonsEnabled.elementAt(0)? Colors.black : Colors.red,                    child: Text(_choices.elementAt(1)),
+                    onPressed: () =>
+                    _buttonsEnabled.elementAt(1)? onChoiceButtonPressed(1) : null,
+                  ),
+                  FlatButton(
+                    textColor: _buttonsEnabled.elementAt(0)? Colors.black : Colors.red,                    child: Text(_choices.elementAt(2)),
+                    onPressed: () =>
+                    _buttonsEnabled.elementAt(2)? onChoiceButtonPressed(2) : null,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 
-  onChoice1ButtonPressed(){
-    setState(() {
+  @override
+  void initState() {
+    super.initState();
+    _initialise();
+  }
 
+  onChoiceButtonPressed(int buttonIndex) {
+    setState(() {
+      print(_choices.elementAt(buttonIndex));
+        if (_choices.elementAt(buttonIndex) == _answer)
+          _initialise();
+        else
+          _buttonsEnabled[buttonIndex] = false;
     });
   }
 
-  onChoice2ButtonPressed(){
-    setState(() {
+  _getRandomSymbol() =>
+      Hiraganas.keys.elementAt(Random().nextInt(Hiraganas.length));
 
-    });
+  _getRandomAnswer() =>
+      Hiraganas.values.elementAt(Random().nextInt(Hiraganas.length));
+
+  _getAnswer(String symbol) => Hiraganas[symbol];
+
+  _initialiseChoices() {
+
+    int answerIndex = Random().nextInt(_buttonNumber);
+
+    for (int i = 0; i < _buttonNumber; i++) {
+      if (answerIndex == i)
+        _choices[i] = _answer;
+      else
+        _choices[i] = _getRandomAnswer();
+    }
   }
 
-  onChoice3ButtonPressed(){
-    setState(() {
-
-    });
+  _initialise() {
+    _value = _getRandomSymbol();
+    _answer = _getAnswer(_value);
+    _initialiseChoices();
+    _buttonsEnabled = [true,true,true];
   }
+
 }
