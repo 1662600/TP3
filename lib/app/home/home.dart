@@ -11,6 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final PageStorageBucket bucket = PageStorageBucket();
   int _currentIndex = 0;
 
   final List<Widget> _children = [
@@ -31,9 +33,14 @@ class _HomeState extends State<Home> {
       body: PageView.builder(
         controller: _pageController,
         itemCount: _children.length,
-        onPageChanged: (int index){onPageChanged(index);},
-        itemBuilder: (BuildContext context, int index){
-          return _children.elementAt(index);
+        onPageChanged: (int index) {
+          onPageChanged(index);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          return PageStorage(
+              bucket: bucket,
+              child: _children.elementAt(index)
+          );
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -58,10 +65,12 @@ class _HomeState extends State<Home> {
       _currentIndex = index;
     });
   }
+
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
-      _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+      _pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 }

@@ -11,7 +11,6 @@ class Training extends StatefulWidget {
 }
 
 class _Training extends State<Training> {
-
   static const int _buttonNumber = 3;
 
   List<String> _choices = List(_buttonNumber);
@@ -22,53 +21,86 @@ class _Training extends State<Training> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
+    return OrientationBuilder(builder: (context, orientation) {
+      return AspectRatio(
         aspectRatio: 1,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Symbol(
-              value: _value,
+            Expanded(
+              flex: orientation == Orientation.portrait ? 6 : 3,
+              child: Symbol(
+                value: _value,
+              ),
             ),
             Expanded(
+              flex: 3,
               child: ListView(
                 children: <Widget>[
                   FlatButton(
-                    textColor: _buttonsEnabled.elementAt(0)? Colors.black : Colors.red,
-                    child: Text(_choices.elementAt(0)
-                    ),
-                    onPressed: () =>
-                    _buttonsEnabled.elementAt(0)? onChoiceButtonPressed(0) : null,
+                    child: Text(_choices.elementAt(0)),
+                    textColor: _buttonsEnabled.elementAt(0)
+                        ? Colors.black
+                        : Colors.red,
+                    onPressed: () => _buttonsEnabled.elementAt(0)
+                        ? onChoiceButtonPressed(0)
+                        : null,
                   ),
                   FlatButton(
-                    textColor: _buttonsEnabled.elementAt(0)? Colors.black : Colors.red,                    child: Text(_choices.elementAt(1)),
-                    onPressed: () =>
-                    _buttonsEnabled.elementAt(1)? onChoiceButtonPressed(1) : null,
+                    child: Text(_choices.elementAt(1)),
+                    textColor: _buttonsEnabled.elementAt(1)
+                        ? Colors.black
+                        : Colors.red,
+                    onPressed: () => _buttonsEnabled.elementAt(1)
+                        ? onChoiceButtonPressed(1)
+                        : null,
                   ),
                   FlatButton(
-                    textColor: _buttonsEnabled.elementAt(0)? Colors.black : Colors.red,                    child: Text(_choices.elementAt(2)),
-                    onPressed: () =>
-                    _buttonsEnabled.elementAt(2)? onChoiceButtonPressed(2) : null,
+                    child: Text(_choices.elementAt(2)),
+                    textColor: _buttonsEnabled.elementAt(2)
+                        ? Colors.black
+                        : Colors.red,
+                    onPressed: () => _buttonsEnabled.elementAt(2)
+                        ? onChoiceButtonPressed(2)
+                        : null,
                   ),
                 ],
               ),
             ),
           ],
-        ));
+        ),
+      );
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    _initialise();
+
+    if(PageStorage.of(context).readState(context, identifier: "choices") == null){
+      _initialise();
+    }
+
+    else{
+      _choices = PageStorage.of(context).readState(context, identifier: "choices");
+      _value = PageStorage.of(context).readState(context, identifier: "value");
+      _answer = PageStorage.of(context).readState(context, identifier: "answer");
+
+      _buttonsEnabled = PageStorage.of(context).readState(context, identifier: "buttonsEnabled");
+    }
+
   }
 
   onChoiceButtonPressed(int buttonIndex) {
     setState(() {
-      print(_choices.elementAt(buttonIndex));
-        if (_choices.elementAt(buttonIndex) == _answer)
-          _initialise();
-        else
-          _buttonsEnabled[buttonIndex] = false;
+
+      if (_choices.elementAt(buttonIndex) == _answer)
+        _initialise();
+      else{
+        _buttonsEnabled[buttonIndex] = false;
+        PageStorage.of(context).writeState(context, _buttonsEnabled, identifier: "buttonsEnabled");
+      }
+
     });
   }
 
@@ -81,7 +113,6 @@ class _Training extends State<Training> {
   _getAnswer(String symbol) => Hiraganas[symbol];
 
   _initialiseChoices() {
-
     int answerIndex = Random().nextInt(_buttonNumber);
 
     for (int i = 0; i < _buttonNumber; i++) {
@@ -90,13 +121,20 @@ class _Training extends State<Training> {
       else
         _choices[i] = _getRandomAnswer();
     }
+
+    PageStorage.of(context).writeState(context, _choices,
+    identifier: "choices");
   }
 
   _initialise() {
-    _value = _getRandomSymbol();
-    _answer = _getAnswer(_value);
-    _initialiseChoices();
-    _buttonsEnabled = [true,true,true];
+      _value = _getRandomSymbol();
+      _answer = _getAnswer(_value);
+      _initialiseChoices();
+      _buttonsEnabled = [true, true, true];
+
+      PageStorage.of(context).writeState(context, _value, identifier: "value");
+      PageStorage.of(context).writeState(context, _answer, identifier: "answer");
+      PageStorage.of(context).writeState(context, _buttonsEnabled, identifier: "buttonsEnabled");
   }
 
 }

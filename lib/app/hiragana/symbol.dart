@@ -9,9 +9,7 @@ class Symbol extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Card(
+      return Card(
         child: FittedBox(
           child: Column(
             children: <Widget>[
@@ -29,7 +27,6 @@ class Symbol extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }
