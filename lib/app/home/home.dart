@@ -12,6 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  //BEN_CORRECTION : Nommage. Bucket de quoi ?
   final PageStorageBucket bucket = PageStorageBucket();
   int _currentIndex = 0;
 
@@ -60,12 +61,14 @@ class _HomeState extends State<Home> {
     );
   }
 
+  //BEN_CORRECTION : Private.
   void onPageChanged(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
+  //BEN_CORRECTION : Private.
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;

@@ -33,10 +33,12 @@ class LearnState extends State<Learn> {
     super.initState();
 
 
+    //BEN_CORRECTION : Constante manquante.
     if (PageStorage.of(context).readState(context, identifier: "scrollOffset") != null){
 
       _scrollController = ScrollController(
           initialScrollOffset: PageStorage.of(context)
+          //BEN_CORRECTION : Constante manquante.
               .readState(context, identifier: "scrollOffset")
       );
     }
@@ -46,6 +48,7 @@ class LearnState extends State<Learn> {
 
   _onScroll() {
     PageStorage.of(context).writeState(context, _scrollController.offset,
+        //BEN_CORRECTION : Constante manquante.
         identifier: "scrollOffset");
   }
 }

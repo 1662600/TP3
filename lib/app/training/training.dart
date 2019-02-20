@@ -36,6 +36,7 @@ class _Training extends State<Training> {
             Expanded(
               flex: 3,
               child: ListView(
+                //BEN_CORRECTION : Code qui se répète. Une boucle aurait du être utilisée.
                 children: <Widget>[
                   FlatButton(
                     child: Text(_choices.elementAt(0)),
@@ -77,15 +78,20 @@ class _Training extends State<Training> {
   void initState() {
     super.initState();
 
+    //BEN_CORRECTION : Constante manquante.
     if(PageStorage.of(context).readState(context, identifier: "choices") == null){
       _initialise();
     }
 
     else{
+      //BEN_CORRECTION : Constante manquante.
       _choices = PageStorage.of(context).readState(context, identifier: "choices");
+      //BEN_CORRECTION : Constante manquante.
       _value = PageStorage.of(context).readState(context, identifier: "value");
+      //BEN_CORRECTION : Constante manquante.
       _answer = PageStorage.of(context).readState(context, identifier: "answer");
 
+      //BEN_CORRECTION : Constante manquante.
       _buttonsEnabled = PageStorage.of(context).readState(context, identifier: "buttonsEnabled");
     }
 
